@@ -1,0 +1,246 @@
+/**
+ * All of the CSS for your public-facing functionality should be
+ * included in this file.
+ */
+
+ /* ACF Form */
+
+ #acf-form .acf-input-prepend, .acf-input-append {
+    line-height: 29px;
+    border-width: 2px;
+    height: 30px;
+    border-right: 0;
+}
+
+ #acf-form.bb-form-updated input.acf-button.button.button-primary.button-large {
+    background-color: #2E3236;
+ }
+
+  #acf-form input.acf-button.button.button-primary.button-large:hover {
+    background-color: #2E3236;
+  }
+
+  .currency-dropdown #acf-form  .acf-form-submit .acf-button {
+    display: none;
+  }
+
+ /* Taki Moore Page */
+
+.blackbelt-blurb .et_pb_blurb_content {
+    margin: 0;
+}
+
+.ribbon-blurb.et_pb_blurb_position_left .et_pb_blurb_container {
+    padding-left: 25px;
+    vertical-align: middle;
+}
+
+.currency-dropdown .acf-input {
+    text-align: center;
+}
+
+
+.currency-dropdown select {
+     width: 100%;
+    text-align: center;
+    padding: 6px 10px;
+    border-radius: 4px;
+    max-width: 95px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.arrow-section:after {
+    content: '';
+    display: block;
+    position: absolute;
+    height: 40px;
+    width: 40px;
+    background-color: #2E3236;
+    bottom: -20px;
+    left: calc(50% - 30px);
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+    z-index: 1;
+}
+
+
+/* Acf Custom Data */
+
+.acf-repeater>table {
+    background: #fff;
+}
+
+
+#ontratabs.et_pb_module.et_pb_tabs ul.et_pb_tabs_controls:after {
+   border-top: 2px solid #2E3236;
+}
+
+.et_pb_tabs_controls li {
+    border: none;
+   border-radius: 4px 4px 0px 0px;
+}
+
+.et_pb_tabs_controls li a {
+   padding: 8px 30px; 
+}
+
+
+
+ul.et_pb_tabs_controls {
+    background: none;
+}
+
+#acf-form {
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+#acf-form .acf-label {
+    display: none;
+}
+
+#acf-form .acf-field p.description
+ {
+    display: none;
+}
+
+#acf-form .acf-field label {
+    font-size: 30px;
+    text-align: center;
+}
+
+/*#acf-form th[data-name="month"],*/
+#acf-form  .label-month .acf-table tr th:nth-child(1) {
+ 
+      font-size: 0;
+}
+
+#acf-form .acf-field.acf-field-text .acf-input input,
+#acf-form .acf-field.acf-field-number .acf-input input  {
+    padding: 10px 10px;
+    height: 40px;
+    width: 100%;
+    border-radius: 4px;
+    border: 2px solid #ccc;
+}
+
+#acf-form th[data-name="actual"] {
+    text-align: center;
+    font-weight: bold;
+
+}
+
+
+.acf-table thead {
+   
+}
+
+#acf-form th[data-type="message"] {
+      
+}
+
+#acf-form  .acf-form-submit {
+    text-align: center;
+    margin-top: 40px;
+}
+
+#acf-form .acf-field.acf-field-message {
+    text-align: left;
+    font-weight: bold
+}
+
+#acf-form .acf-fields .acf-field {
+    padding-top: 0;
+    padding-bottom: 0;
+    border: none;
+}
+
+
+#acf-form input.acf-button.button.button-primary.button-large {
+    border: none;
+    color: #fff;
+    font-weight: bold;
+    padding: 10px 50px;
+    border-radius: 4px;
+    background: #ccc;
+}
+
+#acf-form .acf-fields .acf-field.disable-gray .acf-field
+{
+    background: #ccc;
+
+
+}
+
+#acf-form .acf-fields .acf-field.disable-gray .acf-field.acf-field-message {
+        padding-top: 20px;
+}
+
+#acf-form .acf-fields .acf-field.disable-gray .acf-field.acf-field-text,
+#acf-form .acf-fields .acf-field.disable-gray .acf-field.acf-field-number {
+       padding-top: 15px;
+     padding-bottom: 15px;
+}
+
+#acf-form .acf-fields .acf-field.disable-gray .acf-field.acf-field-text .acf-input input,
+#acf-form .acf-fields .acf-field.disable-gray .acf-field.acf-field-number .acf-input input  {
+      background: #e2e2e2;
+          pointer-events: none;
+}
+
+#acf-form .acf-fields .acf-field.disable-gray .acf-field.acf-field-text,
+#acf-form .acf-fields .acf-field.disable-gray .acf-field.acf-field-number {
+    padding-right: 15px;
+} 
+
+.entry-content #acf-form table:not(.variations), 
+body.et-pb-preview #main-content .container #acf-form table,
+#content-area #acf-form table th,
+#acf-form .acf-table,
+#acf-form .acf-table>thead>tr>th,
+#acf-form tbody {
+
+    border: none;
+
+}
+
+#acf-form .at-accordion-or-tabs.at-tabs > li > a.active {
+    background-color: #2E3236;
+    color: #fff;
+}
+
+#acf-form .at-accordion-or-tabs > li > a:hover {
+	color: #2E3236;
+}
+
+#acf-form .acf-field .acf-input p {
+	margin: 0;
+}
+
+#acf-form .at-accordion-or-tabs.at-tabs > li > a {
+    border: none;
+    background: none;
+    padding: 6px 18px;
+}
+
+#acf-form .at-accordion-or-tabs.at-tabs > li > section {
+
+	border: none;
+	border-top: 2px solid #7E7E80;
+	padding-top: 30px;
+
+}
+
+#acf-form .at-accordion-or-tabs.at-tabs li a {
+	font-weight: bold;
+	border-radius: 4px 4px 0px 0px;
+	color: #7E7E80;
+}
+
+
+
+
+
+/* End Acf Custom Data */
