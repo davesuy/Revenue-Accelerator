@@ -281,6 +281,20 @@ class Black_Belt_Profile_Public {
 
 				//////////
 
+				if( get_field('t2_2019_march_actual', $user_acf_id)) {
+
+					$rep = [",", "null"];
+
+					$data[$i]['revenue']['01/03/2019'] = str_replace($rep, '', get_field('t2_2019_march_actual', $user_acf_id)[0]['actual']);
+
+				} else {
+
+					$data[$i]['revenue']['01/03/2019'] = "";
+
+				}
+
+				//////////
+
 				if( get_field('t2_2019_april_actual', $user_acf_id)) {
 
 					$rep = [",", "null"];
@@ -321,7 +335,7 @@ class Black_Belt_Profile_Public {
 
 				}
 
-				//////////
+				////////// Shifted
 
 				if( get_field('t2_2019_july_actual', $user_acf_id)) {
 
@@ -377,7 +391,7 @@ class Black_Belt_Profile_Public {
 
 				}
 
-				//////////
+				////////// Shifted
 
 				if( get_field('t3_2019_november_actual', $user_acf_id)) {	
 
@@ -490,7 +504,7 @@ class Black_Belt_Profile_Public {
 
 				}
 
-				//////////
+				////////// Shifted
 
 				if( get_field('t2_2020_july_actual', $user_acf_id)) {
 
@@ -976,6 +990,17 @@ class Black_Belt_Profile_Public {
 		die();
 	}
 
+	public function custom_page_template() {
+
+		//global $post;
+
+		//if($post->post_name == "update-profile") {
+			//$page_template =  BLACK_BELT_PROFILE_PLUGIN_PATH."public/partials/update-profile-template.php";
+		//}
+
+		//return $page_template;
+
+	}
 
 
 }

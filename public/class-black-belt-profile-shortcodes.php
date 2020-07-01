@@ -62,6 +62,9 @@ class Black_Belt_Profile_Shortcodes {
 
 		add_shortcode( 'bb_tabs', array($this, 'bb_tabs'));
 
+		add_shortcode( 'bb_address_map', array($this, 'bb_address_map'));
+
+
 	}
 
 
@@ -114,6 +117,18 @@ class Black_Belt_Profile_Shortcodes {
 
 	      $field_groups_ids = $atts[ 'field_groups'];
 	      $field_groups_ids = explode(',', $field_groups_ids);
+
+
+	      	$thank_you_url = get_field( "thank_you_page_url", "options" );
+
+	      	$thank_you_url_val = "";
+
+			if( $thank_you_url ) {
+
+				$thank_you_url_val = $thank_you_url;
+
+			}
+			  
 	   
 	       $acf_form = acf_form(array(
 
@@ -124,7 +139,7 @@ class Black_Belt_Profile_Shortcodes {
 	            'updated_message'    => 'Updated!',
 	            'form_attributes' => array('class' => $class),
 	            //'return' => add_query_arg( 'updated', 'true', get_permalink().  $html_e ), 
-	           	'return' => get_bloginfo('url').'/the-half-time-intensive/thank-you/', 
+	           	'return' => $thank_you_url_val, 
 
 	                
 	               
@@ -162,14 +177,8 @@ class Black_Belt_Profile_Shortcodes {
 		// $c = get_user_meta($id, '_t1_2020_january_actual');
 
 
-		
-				
-				
 	
 	     //echo '<pre>'.print_r($c, true).'ds</pre>';
-
-
-
 
 
 		if($rows)
@@ -213,6 +222,45 @@ class Black_Belt_Profile_Shortcodes {
 		</form>
 			<?php
 		}
+
+
+	   $output = ob_get_clean();
+
+	   return $output;   
+
+	}
+
+	public function bb_address_map($atts) {
+
+		  $atts = shortcode_atts( array(
+	          'field_map' => array(),
+	          'map_count' => '',
+	 
+	      ), $atts, 'bb_address_map' );
+
+	    ob_start();
+
+		    global $current_user;
+
+		    $id = $current_user->ID;
+
+		   	$user_acf_id = 'user_' . $id;
+
+
+		    $street_mailing_address = get_field('street_mailing_address', $user_acf_id);
+		    $street_mailing_address_2 = get_field('street_mailing_address_2', $user_acf_id);
+		    $street_mailing_address_city = get_field('street_mailing_address_city', $user_acf_id);
+		    $street_mailing_address_state = get_field('street_mailing_address_state', $user_acf_id);
+		    $street_mailing_address_postal = get_field('street_mailing_address_postal', $user_acf_id);
+		    $street_mailing_address_country = get_field('street_mailing_address_country', $user_acf_id);
+
+
+		    if($street_mailing_address) {
+
+		    	echo $street_mailing_address.' '.$street_mailing_address_2.' '. $street_mailing_address_city.', '.$street_mailing_address_state.', '.$street_mailing_address_country;
+
+		    }
+
 
 
 	   $output = ob_get_clean();

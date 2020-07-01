@@ -217,6 +217,10 @@ class Black_Belt_Profile {
 		$this->loader->add_action( 'wp_ajax_save_my_data' , $plugin_public, 'bb_acf_form_dropdown_save' );
 		$this->loader->add_action( 'wp_ajax_nopriv_save_my_data' , $plugin_public, 'bb_acf_form_dropdown_save' );
 
+
+		// Filter for page template
+		//$this->loader->add_filter("page_template", $plugin_public, "custom_page_template");
+
 	}
 
 	/**
