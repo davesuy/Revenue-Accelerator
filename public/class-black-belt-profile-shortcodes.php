@@ -51,8 +51,34 @@ class Black_Belt_Profile_Shortcodes {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
+		add_action('acf/save_post', array($this, 'save_post'), 5);
 
-
+	}
+	
+	public function save_post($post_id){
+		global $current_user;
+		$user_id = 'user_' . $current_user->ID;
+		if($post_id == $user_id){
+			$month = strtolower(date("F", strtotime("last month")));
+			if(in_array($month, array('november','december','january','february'))){
+				$term = "t1";
+			} else if(in_array($month, array('march','april','may','june'))){
+				$term = "t2";
+			} else {
+				$term = "t3";
+			}
+			$field = $term."_".date("Y", strtotime("last month"))."_".$month."_actual";
+			$field_object = get_field_object($field, $post_id);
+			if(isset($_POST["acf"][$field_object["key"]])){
+				$value = array_values($_POST["acf"][$field_object["key"]]);
+				$value = $value[0];
+				$value = array_values($value);
+				$value = $value[0];
+				if(!empty($value) && empty($field_object["value"][0]["actual"])){
+					file_get_contents('https://hooks.zapier.com/hooks/catch/77889/o80gw5t/?email='.$current_user->user_email);
+				}
+			}
+		}
 	}
 
 
@@ -63,6 +89,77 @@ class Black_Belt_Profile_Shortcodes {
 		add_shortcode( 'bb_tabs', array($this, 'bb_tabs'));
 
 		add_shortcode( 'bb_address_map', array($this, 'bb_address_map'));
+
+
+		// $user_id = 1675;
+		// $website = 'http://example.comx';
+		 
+		// $user_data = wp_update_user( array( 'ID' => $user_id, 'user_url' => $website ) );
+		 
+		// if ( is_wp_error( $user_data ) ) {
+		//     // There was an error; possibly this user doesn't exist.
+		//     echo 'Error.';
+		// } else {
+		//     // Success!
+		// }
+
+
+		 // global $current_user;
+	              
+	  //     $user_id = 'user_' . $current_user->ID;
+
+	  //     echo $user_id.'xcx';
+
+
+		global $current_user;
+
+		$user_id = $current_user->ID;
+	              
+	    $user_acf_id = 'user_' . $current_user->ID;
+	    $email = $current_user->user_email;
+
+	    
+		// //$website = "www.website.com";
+		 
+		// $user_data = wp_update_user( array( 'ID' => $user_id, 'user_url' => $website ) );
+		 
+		// if ( is_wp_error( $user_data ) ) {
+		//     // There was an error; possibly this user doesn't exist.
+		//     echo 'Error.';
+		// } else {
+		//     // Success!
+		// }
+
+	 //    if( get_field('t2_2020_june_actual', $user_acf_id)) {
+
+		// 	$month = '01/06/2020';
+		// 	$value_june = get_field('t2_2020_june_actual', $user_acf_id);
+		
+
+		// 	//echo '<pre>'.print_r($value_june[0]['actual'], true).'</pre>';
+
+		
+
+		// 	wp_remote_post("https://hooks.zapier.com/hooks/catch/108162/o8n3a05/?email='".$email."'&month='".$month."'&value='".$value_june[0]['actual']."'");
+
+		// }
+
+
+		// if( get_field('t2_2020_may_actual', $user_acf_id)) {
+
+		// 	$month = '01/05/2020';
+		// 	$value_may = get_field('t2_2020_may_actual', $user_acf_id);
+
+
+		// 	//echo '<pre>'.print_r($value_may[0]['actual'], true).'</pre>';
+		
+
+		// 	wp_remote_post("https://hooks.zapier.com/hooks/catch/108162/o8n3a05/?email='".$email."'&month='".$month."'&value='".$value_may[0]['actual']."'");
+
+		// }
+
+
+
 
 
 	}
@@ -77,7 +174,8 @@ class Black_Belt_Profile_Shortcodes {
 	 
 	      ), $atts, 'ti_acf_form' );
 
-	      ob_start();
+	    
+	    ob_start();
 
 	     $args = [
 			array( 'fields' => array( 'ID', 'display_name', 'user_nicename', 'user_email') ) 
@@ -119,17 +217,21 @@ class Black_Belt_Profile_Shortcodes {
 	      $field_groups_ids = explode(',', $field_groups_ids);
 
 
-	      	$thank_you_url = get_field( "thank_you_page_url", "options" );
+	      	//$thank_you_url = get_field( "thank_you_page_url", "options" );
 
-	      	$thank_you_url_val = "";
+	      	//$thank_you_url_val = "";
 
-			if( $thank_you_url ) {
+			//if( $thank_you_url && !is_page('accelerator')) {
 
-				$thank_you_url_val = $thank_you_url;
+				//$thank_you_url_val = $thank_you_url;
 
-			}
+			//} elseif(is_page('accelerator')) {
+
+				 $thank_you_url_val = add_query_arg( 'updated', false, get_permalink());
+			//}
 			  
-	   
+	   		echo '<input type="hidden" class="debug-ty" name="'.$thank_you_url_val.'"/>';
+	   		
 	       $acf_form = acf_form(array(
 
 	            'post_id' => $user_id,
@@ -138,7 +240,7 @@ class Black_Belt_Profile_Shortcodes {
 	            'submit_value' => __($updated , 'acf'),
 	            'updated_message'    => 'Updated!',
 	            'form_attributes' => array('class' => $class),
-	            //'return' => add_query_arg( 'updated', 'true', get_permalink().  $html_e ), 
+	            //'return' => add_query_arg( 'updated', false, get_permalink()), 
 	           	'return' => $thank_you_url_val, 
 
 	                
@@ -185,41 +287,42 @@ class Black_Belt_Profile_Shortcodes {
 		{
 			?>
 
-				<form id="post" class="acf-form" action="" method="post">
-			<div id="acf-form">
-		    	<ul class="bb-tabs">
-
-				<?php
-
-				foreach($rows as $row)
-				{
-
-					$field_label = acf_get_fields($row['periods']);
-
-					$label = $field_label[0]['label'];
-
-					?>
-					<li><a><?php echo $label; ?></a>
-					    <section>
-					    	<?php echo do_shortcode('[ti_acf_form field_groups="'.$row['periods'] .'"]'); ?>
-					    </section>
-
-
-					</li>
+			<form id="post" class="acf-form" action="" method="post">
+				<div id="acf-form" class="rev-acc-form">
+			    	<ul class="bb-tabs">
 
 					<?php
-				}
 
-				?>
-					<div class="acf-form-submit">
-				        <input type="submit" class="acf-button button button-primary button-large" value="Save">
-				        <span class="acf-spinner"></span>
-	    			</div>
-				</ul>
+					foreach($rows as $row)
+					{
 
-				
-			</div>
-		</form>
+						$field_label = acf_get_fields($row['periods']);
+
+						$label = $field_label[0]['label'];
+
+						?>
+						<li><a><?php echo $label; ?></a>
+						    <section>
+						    	<?php echo do_shortcode('[ti_acf_form field_groups="'.$row['periods'] .'"]'); ?>
+						    </section>
+
+
+						</li>
+
+						<?php
+					}
+
+					?>
+						<div class="acf-form-submit">
+					        <input type="submit" class="acf-button button button-primary button-large" value="Save">
+					        <span class="acf-spinner"></span>
+		    			</div>
+					</ul>
+
+					
+				</div>
+			</form>
+
 			<?php
 		}
 

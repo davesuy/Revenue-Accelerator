@@ -1,11 +1,10 @@
 jQuery(document).ready(function($){
-
-
-	$(".currency-dropdown #acf-form select").on('change', function(event) {
+ 
+	$(".currency-dropdown .acf-fields select").on('change', function(event) {
 
 	    event.preventDefault();
 
-	    //alert(1);
+	
 	  
 	   // console.log(3);
 
@@ -34,9 +33,11 @@ jQuery(document).ready(function($){
 
 	    jQuery.post(bb_ajax_object.ajax_url, {"action" : "save_my_data", "val_select" : val_select}) // you will need to get the ajax url for you site
 	     .done(function(data){
-	     		console.log(data);
+	     	
+	     	//console.log(data);
 	     	 //alert('Added successFully :');
-	     	 $('.currency-dropdown .acf-form-submit .acf-spinner').css('display', 'none');
+
+	     	$('.currency-dropdown .acf-form-submit .acf-spinner').css('display', 'none');
 	       //you get back something like {"result":1,"message":"Validation successful","errors":0}
 	     })
 

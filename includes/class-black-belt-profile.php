@@ -207,6 +207,14 @@ class Black_Belt_Profile {
 		$this->loader->add_action( 'init', $plugin_shortcode, 'public_shortcodes' );
 
 
+		// Shortcodes BB Tabs Combined
+
+		
+		$plugin_profile_combined_shortcode =  new Black_Belt_Profile_Combined_Shortcodes( $this->get_plugin_name(), $this->get_version());
+
+		$this->loader->add_action( 'init', $plugin_profile_combined_shortcode, 'public_profile_combined_shortcodes' );
+
+
 		// Acf Options Page 
 
 		$this->loader->add_action( 'acf/init' , $plugin_public, 'my_acf_op_init' );
@@ -220,6 +228,15 @@ class Black_Belt_Profile {
 
 		// Filter for page template
 		//$this->loader->add_filter("page_template", $plugin_public, "custom_page_template");
+
+
+		// ACF Save Post Hook Zapier
+
+		$this->loader->add_action( 'acf/save_post' , $plugin_public, 'bb_hook_zapier' );
+
+		// Gravity Form Filter Board Room
+
+		$this->loader->add_filter('gform_field_value_board_member', $plugin_public, 'board_member_population_function' );
 
 	}
 

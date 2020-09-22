@@ -63,6 +63,8 @@ class Black_Belt_Profile_Public {
 
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-black-belt-profile-shortcodes.php';
 
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-black-belt-profile-combined-shortcodes.php';
+
 	}
 
 
@@ -88,6 +90,11 @@ class Black_Belt_Profile_Public {
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/black-belt-profile-public.css', array(), $this->version, 'all' );
 
 		wp_enqueue_style( "jquery.atAccordionOrTabs",  plugin_dir_url( __FILE__ )  . '/css/jquery.atAccordionOrTabs.css', array(), $this->version, 'all' );
+
+		wp_enqueue_style( "bootstrap",  plugin_dir_url( __FILE__ )  . '/css/bootstrap.css', array(), $this->version, 'all' );
+
+		wp_enqueue_style( "bootstrap-grid",  plugin_dir_url( __FILE__ )  . '/css/bootstrap-grid.css', array(), $this->version, 'all' );
+
 
 	}
 
@@ -133,6 +140,9 @@ class Black_Belt_Profile_Public {
         	) 
 
         );
+
+
+        wp_enqueue_script( 'bootstrap',  plugin_dir_url( __FILE__ ) . 'js/bootstrap.js', array( 'jquery'), $this->version, true );
 
 
 
@@ -279,7 +289,70 @@ class Black_Belt_Profile_Public {
 					$data[$i]['currency'] = "";
 				}
 
-				//////////
+
+				///// T1 2018, 2019
+
+				if( get_field('t1_2018_october_actual', $user_acf_id)) {
+
+					$rep = [",", "null"];
+
+					$data[$i]['revenue']['01/10/2018'] = str_replace($rep, '', get_field('t1_2018_october_actual', $user_acf_id)[0]['actual']);
+
+				} else {
+
+					$data[$i]['revenue']['01/10/2018'] = "";
+
+				}
+
+				if( get_field('t1_2018_november_actual', $user_acf_id)) {
+
+					$rep = [",", "null"];
+
+					$data[$i]['revenue']['01/11/2018'] = str_replace($rep, '', get_field('t1_2018_november_actual', $user_acf_id)[0]['actual']);
+
+				} else {
+
+					$data[$i]['revenue']['01/11/2018'] = "";
+
+				}
+
+				if( get_field('t1_2018_december_actual', $user_acf_id)) {
+
+					$rep = [",", "null"];
+
+					$data[$i]['revenue']['01/12/2018'] = str_replace($rep, '', get_field('t1_2018_december_actual', $user_acf_id)[0]['actual']);
+
+				} else {
+
+					$data[$i]['revenue']['01/12/2018'] = "";
+
+				}
+
+				if( get_field('t1_2019_january_actual', $user_acf_id)) {
+
+					$rep = [",", "null"];
+
+					$data[$i]['revenue']['01/01/2019'] = str_replace($rep, '', get_field('t1_2019_january_actual', $user_acf_id)[0]['actual']);
+
+				} else {
+
+					$data[$i]['revenue']['01/01/2019'] = "";
+
+				}
+
+				if( get_field('t1_2019_february_actual', $user_acf_id)) {
+
+					$rep = [",", "null"];
+
+					$data[$i]['revenue']['01/02/2019'] = str_replace($rep, '', get_field('t1_2019_february_actual', $user_acf_id)[0]['actual']);
+
+				} else {
+
+					$data[$i]['revenue']['01/02/2019'] = "";
+
+				}
+
+				////////// t2 2019
 
 				if( get_field('t2_2019_march_actual', $user_acf_id)) {
 
@@ -571,6 +644,8 @@ class Black_Belt_Profile_Public {
 					$data[$i]['revenue']['01/11/2020'] = "";
 
 				}
+
+
 					
 		
 			}
@@ -1000,6 +1075,72 @@ class Black_Belt_Profile_Public {
 
 		//return $page_template;
 
+	}
+
+	public function bb_hook_zapier() {
+
+		global $current_user;
+
+		$user_id = $current_user->ID;
+	              
+	    $user_acf_id = 'user_' . $current_user->ID;
+	    $email = $current_user->user_email;
+
+	    
+		// //$website = "www.website.com";
+		 
+		// $user_data = wp_update_user( array( 'ID' => $user_id, 'user_url' => $website ) );
+		 
+		// if ( is_wp_error( $user_data ) ) {
+		//     // There was an error; possibly this user doesn't exist.
+		//     echo 'Error.';
+		// } else {
+		//     // Success!
+		// }
+
+	    if( get_field('t2_2020_june_actual', $user_acf_id)) {
+
+			$month = '01/06/2020';
+			$value_june = get_field('t2_2020_june_actual', $user_acf_id);
+		
+
+			//echo '<pre>'.print_r($value_june[0]['actual'], true).'</pre>';
+
+
+			//wp_remote_post("https://hooks.zapier.com/hooks/catch/108162/o8n3a05/?email='".$email."'&month='".$month."'&value='".$value_june[0]['actual']."'");
+
+
+			wp_remote_post("https://hooks.zapier.com/hooks/catch/77889/o80gw5t/?email='".$email."'&month='".$month."'&value='".$value_june[0]['actual']."'");
+
+
+		}
+
+
+		if( get_field('t2_2020_may_actual', $user_acf_id)) {
+
+			$month = '01/05/2020';
+			$value_may = get_field('t2_2020_may_actual', $user_acf_id);
+
+
+			//echo '<pre>'.print_r($value_may[0]['actual'], true).'</pre>';
+			
+
+			//wp_remote_post("https://hooks.zapier.com/hooks/catch/108162/o8n3a05/?email='".$email."'&month='".$month."'&value='".$value_may[0]['actual']."'");
+
+			wp_remote_post("https://hooks.zapier.com/hooks/catch/77889/o80gw5t/?email='".$email."'&month='".$month."'&value='".$value_may[0]['actual']."'");
+
+		}
+
+		
+
+	}
+
+	// Gravity Form Board Member
+
+	function board_member_population_function( $value ) {
+
+    	return do_shortcode('[wp_ontraninja_board_member]');
+    
 	}
 
 
