@@ -414,7 +414,7 @@ body.et-pb-preview #main-content .container #acf-form.rev-acc-form table,
 }
 
 #acf-form-combined .company_name_field_combined input {
-    pointer-events: none;
+/*    pointer-events: none;*/
 }
 
 .gform_wrapper .organicweb-readonly input,

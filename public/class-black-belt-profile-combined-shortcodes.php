@@ -51,11 +51,18 @@ class Black_Belt_Profile_Combined_Shortcodes {
 
 	public $hash_num;
 
-	public function __construct( $plugin_name, $version ) {
+
+	public $contact_data;
+
+
+
+
+	public function __construct( $plugin_name, $version) {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
-
+		$this->contact_data = $contact_data;
+	
 	
 
 	}
@@ -69,7 +76,7 @@ class Black_Belt_Profile_Combined_Shortcodes {
 
 	}
 
-	public function handle_combined_submitted() {
+	public function handle_combined_submitted($connect_api_instance) {
 
 
 		$current_user = wp_get_current_user();
@@ -148,9 +155,6 @@ class Black_Belt_Profile_Combined_Shortcodes {
 			}
 
 	
-
-
-
 
 			if(isset($_POST['prefer_check_email'])) {
 
@@ -242,6 +246,21 @@ class Black_Belt_Profile_Combined_Shortcodes {
 
 			}
 
+			if(isset($_POST['workshop_materials'])) {
+
+				//update_user_meta( $user_id, 'prefer_check_carrier', "Yes" );
+				//$contact_data = $this->contact_data;
+				//$pref_val = $contact_data[0]->{"f2377"};
+
+				$connect_api_instance->connect_api_update_preference($_POST['workshop_materials']);
+			
+				//echo '<pre>'.print_r($contact_data , true).'</pre>';
+			} else {
+
+				//update_user_meta( $user_id, 'prefer_check_carrier', "No" );
+
+			}
+
 			
 		}
 
@@ -277,8 +296,13 @@ class Black_Belt_Profile_Combined_Shortcodes {
 
 	public function bb_tabs_combined($atts) {
 
+		/** Connect API Regsistration **/
 
-		$this->handle_combined_submitted();
+		$connect_api_instance = new Wp_Ontraninja_Connect_Ontraport;
+
+
+
+		$this->handle_combined_submitted($connect_api_instance);
 
 		$this->handle_current_level_submitted();
 
@@ -345,7 +369,68 @@ class Black_Belt_Profile_Combined_Shortcodes {
 			$thank_you_url_val = add_query_arg( 'updated', false, get_permalink());
 
 
-	 
+
+
+
+		
+
+			// Contact Meta
+
+
+			$contact_meta =  $connect_api_instance->contact_meta();
+
+			
+			// Companies //
+
+
+			$company_result = $connect_api_instance->get_company_data();
+
+			// Object Props - [id] [owner] [date] [name]  etc.
+
+
+			//echo '<pre>'.print_r($company_result, true).'</pre>';
+
+		
+
+			$company_id = $company_result->id;
+
+			$company_name = $company_result->name;
+
+
+			// Tags //
+
+
+			//$tag_results = $connect_api_instance->retrieveMultipleTags()->data;
+
+			$tag_results = $company_result;
+
+
+			// Contacts
+			
+			$contact_data = $connect_api_instance->contact_data();
+
+			$this->contact_data = $contact_data;
+
+		
+
+			// Blackbelt Color
+
+			$Blackbelt_color = $contact_data[0]->BBBeltColo_354; // 488 ID Color on option
+			$Blackbelt_next = $contact_data[0]->{"f2368"}; // 1396 ID Color on option
+
+
+			$contact_meta_blackbelt_color = $contact_meta->data->{0}->fields->BBBeltColo_354->options->$Blackbelt_color;
+
+
+			// Next Highest Belt Achieved metaL f2368
+
+			$Blackbelt_next_color = $contact_meta->data->{0}->fields->{"f2368"}->options->$Blackbelt_next; 
+
+			//echo '<pre>'.print_r($Blackbelt_next , true).'</pre>';
+
+
+			//echo '<pre>'.print_r($contact_meta->data->{0}->fields->BBBeltColo_354->options, true).'</pre>';
+
 			?>
 
 
@@ -358,7 +443,11 @@ class Black_Belt_Profile_Combined_Shortcodes {
 						    <section>
 						    	<?php
 
-						    		echo do_shortcode('[gravityform id="27" title="false" description="false"]');
+						    		// Local
+						    		//echo do_shortcode('[gravityform id="56"  field_values="company='.$company_name.'" title="false" description="false"]');
+
+						    		//Live
+						    		echo do_shortcode('[gravityform id="30"  field_values="company='.$company_name.'" title="false" description="false"]');
 
 						    	?>
 						    </section>
@@ -389,12 +478,22 @@ class Black_Belt_Profile_Combined_Shortcodes {
     								<?php
     								}
     								?>
+								
+									<div class="acf-fields">
+	    								<div class="acf-field">
+		    								<div class="acf-label">
+												<label id="company_name"><strong>Company Name</strong></label>
+												<p style="font-weight: normal"><?php echo $company_name; ?></p>
+											</div>
+										</div>
+									</div>
 						    		<?php
 								   		
 								       $acf_form = acf_form(array(
 
 								            'post_id' => $user_id,
-								            'field_groups'       => array(6442),
+								            //'field_groups'       => array(6442),	// Local
+								            'field_groups'       => array(6542), // Live
 								            'form' => true,
 								            'submit_value' => __($updated , 'acf'),
 								            'updated_message'    => 'Updated!',
@@ -407,8 +506,120 @@ class Black_Belt_Profile_Combined_Shortcodes {
 								        ) ); 
 
 								     ?>
-								 </div>
-						
+
+								<div class="add-member-con mt-4">
+									
+								     <div class="acf-label">
+										<label><strong>Team Members</strong></label>
+									</div>
+
+									<ul class="team-member-lists mb-5" style="margin-left: 0">
+									<!-- 	<li>John Doe</li> -->
+
+										<?php
+											// Related Companies
+
+
+											$company_related_results = $connect_api_instance->related_company_data();
+
+
+
+											if(!empty($company_related_results)) {
+
+												$company_related_result_output = "";
+
+												foreach($company_related_results as $company_related_result) {
+
+
+													$company_related_result_output .= '<li>'.$company_related_result->firstname.' '.$company_related_result->lastname.'</li>';
+
+													
+												}
+
+												echo $company_related_result_output;
+											}
+
+										?>
+									</ul>
+
+								    <form action="" method="post" id="add_members_form">
+								    	<div class="acf-label">
+											<label><strong>New Team Member Information</strong></label>
+										</div>
+
+									    <div class="row">
+									     	<div class="col-md-5">
+										  		<label for="fname">First name:</label>
+										  		<p><input type="text" id="fname" name="fname"  required></p>
+
+										  		<label for="lname">Last name:</label>
+										  		<p><input type="text" id="lname" name="lname" required></p>
+							
+
+										   		<label for="email">Email:</label>
+										  		<p><input type="email" id="email" name="email" required></p>
+										 
+										 	</div>
+
+											<div class="col-md-5">
+
+											  <label for="phone">Mobile Phone:</label>
+
+											  <p><input type="tel" id="phone" name="phone" placeholder="123-45-678" pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"></p>
+											
+
+											  <label for="fb_url">Facebook URL:</label>
+											  <p><input type="url" id="fb_url" name="fb_url"></p>
+											  	
+											  <input type="hidden" id="company" name="company" value="<?php echo $company_id; ?>">
+
+											 <!--  <label for="tags">Tags:</label> -->
+
+											<!-- 	<select data-placeholder="Select tags" name="member_tags" id="member_tags" class="bb-tags-select" multiple> -->
+													<?php
+														// if(!empty($tag_results)) {
+
+														// 	foreach($tag_results as $tag_result) {
+
+														// 		echo '<option value="'.$tag_result->tag_id.'">'.$tag_result->tag_name.'</option>';
+														// 	}
+
+
+														// }		
+
+													?>																				
+											<!-- 	</select> -->
+
+											<!-- 	<ul> -->
+													<?php
+														// if(!empty($tag_results)) {
+
+														// 	echo '<pre>'.print_r($tag_results, true).'</pre>';
+
+														// 	foreach($tag_results as $tag_result) {
+
+																
+														// 	}
+
+														// }		
+
+													?>
+												  
+											
+												<!-- </ul> -->
+
+											</div>
+										</div>
+
+										<div class="acf-form-submit">
+											<input type="submit" class="acf-button button button-primary button-large" value="Add a Member" style="background-color: rgb(46, 50, 54);">
+											<span class="acf-spinner"></span>
+										</div>
+
+									</form>
+								 
+								</div>
+								</div>
 						    </section>
 
 
@@ -523,10 +734,29 @@ class Black_Belt_Profile_Combined_Shortcodes {
 													}
 
 												?>
-											
+										
 										</tbody>
 								 
 								  	</table>
+
+								  		<label for="workshop_materials"><p>Workshop Materials</p></label>
+
+								  		<select name="workshop_materials" id="workshop_materials">
+
+											<?php
+														
+
+												$pref_val = $this->contact_data[0]->{"f2377"};
+
+													
+													//echo '<pre>'.print_r(	$pref_val , true).'</pre>';
+												?>
+
+											  <option value="1413" <?php echo ($pref_val  == 1413 ? "selected" : ""); ?> >Yes, digital for me. I'll always want digital (NERD) version of workshop materials.</option>
+
+											  <option value="1412" <?php echo ($pref_val  == 1412 ? "selected" : ""); ?> >No, let me choose. Ask me each time: I'll decide for each BBI and HTI on print digital.</option>
+													
+										</select>
 
 							  		<p class="mt-4"><input type="submit" name="prefer_submitted" id="submitted" value="SAVE CHANGES" /></p>
 								</form>
@@ -570,7 +800,9 @@ class Black_Belt_Profile_Combined_Shortcodes {
 
 
 						    			<p><strong>Current Belt Level</strong></p>
-						    			<p><input type="text" value="" placeholder="Black" /></p>
+						    			<p><span style="font-weight: normal"><?php echo $contact_meta_blackbelt_color; ?></span></p>
+						    			<p><strong>Next Highest Belt Achieved</strong></p>
+						    			<p><span style="font-weight: normal"><?php echo $Blackbelt_next_color; ?></span></p>
 
 						    			
 
@@ -638,11 +870,44 @@ class Black_Belt_Profile_Combined_Shortcodes {
 																//echo '<pre>'.print_r($current_year, true).'</pre>';
 
 
-																$val_m_y = 't2_'.$current_year.'_'.$prevmonth.'_actual';
+																$acf = acf_get_field_groups();
+
+															
+																foreach($acf as $ac => $val) {
+
+																	$title_t = $val['title'];
+
+																	$firstCharacter = substr($title_t, 0, 1);
+																	$secondCharacter = substr($title_t, 1, 2);
+
+																	if($firstCharacter == 'T') {
+																				//echo '<pre>'.print_r($secondCharacter, true).'</pre>';
+																		if(filter_var($secondCharacter, FILTER_VALIDATE_INT) !== false ) {
+
+																		
+																			$max_h[] = $secondCharacter;
+																		 	
+																			//echo '<pre>'.print_r($title_t, true).'</pre>';
+																		 	
+																		 }
+
+																	}
+																
+																		
+
+																
+																	
+																}
+
+																$tt = 't'.max($max_h).'_';
+																$tt_o = preg_replace('/\s+/', '',$tt);
+
+																$val_m_y = $tt_o.$current_year.'_'.$prevmonth.'_actual';
 															
 																$field = get_field_object($val_m_y, $user_id );
 
-
+																// echo '<pre>'.print_r($val_m_y, true).'</pre>';
+																// echo '<pre>'.print_r($user_id, true).'</pre>';
 
 															?>
 
@@ -741,7 +1006,8 @@ class Black_Belt_Profile_Combined_Shortcodes {
 				    </div>
 				</div>
 			<?php
-	
+
+		
 
 	   $output = ob_get_clean();
 
